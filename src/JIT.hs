@@ -42,12 +42,8 @@ runJIT astmod = do
     withHostTargetMachine Reloc.PIC CodeModel.Default CodeGenOpt.Default $ \tm ->
       withModuleFromAST context astmod $ \m -> do
         optimized <- withPassManager passes $ flip runPassManager m
-<<<<<<< HEAD
         putStrLn ""
         when optimized $ putStrLn "Optimized"
-=======
-        when optimized $ putStrLn "\nOptimized"
->>>>>>> upstream/llvm-12
         optmod <- moduleAST m
         s <- moduleLLVMAssembly m
         ByteString.putStrLn s
