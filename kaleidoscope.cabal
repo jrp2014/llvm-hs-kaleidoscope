@@ -1,3 +1,4 @@
+cabal-version:      2.2
 name:               kaleidoscope
 version:            0.1.0.0
 synopsis:           Standalone LLVM JIT Tutorial
@@ -9,14 +10,13 @@ author:             Stephen Diehl
 maintainer:         stephen.m.diehl@gmail.com
 build-type:         Simple
 extra-source-files: README.md
-cabal-version:      >=1.10
 tested-with:        GHC ==8.10.4
 
 source-repository head
   type:     git
   location: https://github.com/llvm-hs-kaleidoscop.git
 
-executable main
+common common-options
   build-depends:
       base            >=4.6  && <4.15
     , bytestring      >=0.10 && <0.11
@@ -26,6 +26,7 @@ executable main
     , llvm-hs-pure    >=12.0 && <13.0
     , mtl             >=2.2  && <2.3
     , text            >=1.2  && <2.0
+    , transformers
 
   other-modules:
     Codegen
@@ -33,7 +34,6 @@ executable main
 
   default-language: Haskell2010
   hs-source-dirs:   src
-  main-is:          Main.hs
   ghc-options:
     -Wall -Wcompat -Widentities -Wincomplete-uni-patterns
     -Wincomplete-record-updates -Wredundant-constraints
@@ -50,3 +50,7 @@ executable main
 
   if impl(ghc >=8.10)
     ghc-options: -Wunused-packages
+
+executable main
+  import:  common-options
+  main-is: Main.hs

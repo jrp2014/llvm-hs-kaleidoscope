@@ -26,7 +26,7 @@ import LLVM.Pretty
 import qualified LLVM.Relocation as Reloc
 import LLVM.Target
 
-foreign import ccall "dynamic" haskFun :: FunPtr (IO Double) -> (IO Double)
+foreign import ccall "dynamic" haskFun :: FunPtr (IO Double) -> IO Double
 
 run :: FunPtr a -> IO Double
 run fn = haskFun (castFunPtr fn :: FunPtr (IO Double))
@@ -42,7 +42,8 @@ runJIT astmod = do
     withHostTargetMachine Reloc.PIC CodeModel.Default CodeGenOpt.Default $ \tm ->
       withModuleFromAST context astmod $ \m -> do
         optimized <- withPassManager passes $ flip runPassManager m
-        when optimized $ putStrLn "\nOptimized"
+        putStrLn ""
+        when optimized $ putStrLn "Optimized"
         optmod <- moduleAST m
         s <- moduleLLVMAssembly m
         ByteString.putStrLn s
